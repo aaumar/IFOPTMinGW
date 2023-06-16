@@ -18,3 +18,7 @@ into
 ## To-Do List
 
 - [] Update documentation
+- [] Add Linear Programming
+- [] Add Quadratic Programming
+- [] Add Model Predictive Control
+- [] Add Data-Driven Control
