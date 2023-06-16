@@ -15,6 +15,15 @@ into
 `#include <coin-or/IpIpoptApplication.hpp>`  
 `#include <coin-or/IpSolveStatistics.hpp>`
 
+Inside foler `ifopt_core/include/ifopt`
+1. File `composite.h`, change the following  
+`#include <Eigen/Dense>`  
+`#include <Eigen/Sparse>`  
+into  
+`#include <eigen3/Eigen/Dense>`  
+`#include <eigen3/Eigen/Sparse>`
+
+
 ## To-Do List
 
 - [ ] Update documentation
