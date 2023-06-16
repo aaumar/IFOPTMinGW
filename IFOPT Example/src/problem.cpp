@@ -1,5 +1,60 @@
 #include <problem.hpp>
 
+using namespace ifopt;
+using Eigen::Vector2d;
+using Eigen::VectorXd;
+
+Eigen::VectorXd ExVariables::GetValues() const {
+    return Vector2d(x0_, x1_);
+}
+
+Component::VecBound ExVariables::GetBounds() const {
+    VecBound bounds(GetRows());
+    bounds.at(0) = Bounds(-1.0, 1.0);
+    bounds.at(1) = NoBound;
+    return bounds;
+}
+
+void ExVariables::SetVariables(const VectorXd& x) {
+    x0_ = x(0);
+    x1_ = x(1);
+}
+
+VectorXd ExConstraint::GetValues() const {
+    VectorXd g(GetRows());
+    Vector2d x = GetVariables()->GetComponent("var_set1")->GetValues();
+    g(0) = std::pow(x(0),2) + x(1);
+    return g;
+}
+
+Component::VecBound ExConstraint::GetBounds() const {
+    VecBound b(GetRows());
+    b.at(0) = Bounds(1.0, 1.0);
+    return b;
+}
+
+void ExConstraint::FillJacobianBlock (std::string var_set, Component::Jacobian& jac_block) const {
+    if (var_set == "var_set1") {
+        Vector2d x = GetVariables()->GetComponent("var_set1")->GetValues();
+
+        jac_block.coeffRef(0, 0) = 2.0*x(0); // derivative of first constraint w.r.t x0
+        jac_block.coeffRef(0, 1) = 1.0;      // derivative of first constraint w.r.t x1
+    }
+}
+
+double ExCost::GetCost() const{
+    Vector2d x = ExCost::GetVariables()->GetComponent("var_set1")->GetValues();
+    return -std::pow(x(1)-2,2);
+}
+
+void ExCost::FillJacobianBlock(std::string var_set, Component::Jacobian& jac) const {
+    if (var_set == "var_set1") {
+      Vector2d x = GetVariables()->GetComponent("var_set1")->GetValues();
+
+      jac.coeffRef(0, 0) = 0.0;             // derivative of cost w.r.t x0
+      jac.coeffRef(0, 1) = -2.0*(x(1)-2.0); // derivative of cost w.r.t x1
+    }
+}
 
 // namespace ifopt {
 // using Eigen::Vector2d;

@@ -9,7 +9,11 @@ using Eigen::Vector2d;
 class ExVariables : public VariableSet {
 public:
   ExVariables() : ExVariables("var_set1") {};
-  ExVariables(const std::string& name) : VariableSet(2, name){};
+  ExVariables(const std::string& name) : VariableSet(2, name){
+    // the initial values where the NLP starts iterating from
+    x0_ = 3.5;
+    x1_ = 1.5;
+  };
   void SetVariables(const VectorXd& x) override;
   VectorXd GetValues() const override;
   VecBound GetBounds() const override;
